@@ -2,18 +2,25 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
 }
 
 h2 {
   text-align: center;
   margin-bottom: 20px;
+  color: #0d47a1;
 }
 
 .alert-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .alert-table th,
@@ -24,7 +31,7 @@ h2 {
 }
 
 .alert-table th {
-  background-color: #4caf50;
+  background-color: #42a5f5;
   color: white;
 }
 
@@ -33,7 +40,89 @@ h2 {
 }
 
 .alert-table tr:hover {
-  background-color: #ddd;
+  background-color: #e3f2fd;
+}
+
+button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #0d47a1;
+  color: white;
+  margin-right: 8px;
+}
+
+.edit-btn:hover {
+  background-color: #1565c0;
+}
+
+.delete-btn {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #b71c1c;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: black;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.alert-table-container {
+  margin-top: 20px;
+}
+
+.alert-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.alert-table th,
+.alert-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
 }
 
 @media (max-width: 600px) {
@@ -49,5 +138,10 @@ h2 {
 
   .alert-table-container {
     padding: 10px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 6px 10px;
   }
 }
