@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import SubmitAlert from "../SubmitAlert";
+import HttpService from "../httpservice";
 import "./AlertList.css";
 
 interface Alert {
@@ -42,7 +43,7 @@ const AlertList: FC = () => {
         name: activeAlert.name,
         age: String(activeAlert.age),
         description: activeAlert.description,
-        file: activeAlert.file ?? null, // ! This works, but the compiler has an issue with it ! //
+        file: activeAlert.file ?? null,
       });
     }
   }, [activeAlert]);
@@ -52,6 +53,7 @@ const AlertList: FC = () => {
     setActiveAlert((prevState) =>
       prevState?.id === id ? null : selectedAlert || null
     );
+    HttpService.getAlerts();
   };
 
   const closeModal = () => {
@@ -68,8 +70,8 @@ const AlertList: FC = () => {
     if (activeAlert) {
       setActiveAlert({
         ...activeAlert,
-        ...newFormData,
-        age: Number(newFormData.age),
+        ...newFormData, //
+        age: Number(newFormData.age), // Convert age to a number
       });
     }
   };
@@ -106,8 +108,10 @@ const AlertList: FC = () => {
                     <a
                       href={
                         typeof alert.file === "string"
-                          ? alert.file
-                          : URL.createObjectURL(alert.file)
+                          ? alert.file // It's already a string URL
+                          : alert.file instanceof File
+                          ? URL.createObjectURL(alert.file) // It's a File object, create URL
+                          : "#"
                       }
                     >
                       Download

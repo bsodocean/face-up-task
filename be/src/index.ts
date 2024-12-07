@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import cors from "cors";
 
 const app = express();
 const port: number = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -7,7 +8,12 @@ const port: number = process.env.PORT ? Number(process.env.PORT) : 3000;
 const prisma = new PrismaClient();
 
 // Middleware
-app.use(express.json());
+app.use(
+  express.json(),
+  cors({
+    origin: "http://localhost:5173", // TODO make this dynamic
+  })
+);
 
 // API Routes
 
