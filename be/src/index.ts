@@ -31,27 +31,31 @@ app.post("/api/newAlert", async (req: Request, res: Response) => {
   }
 });
 
-// * SERVER PING
-app.get("/api/helloWorld", async (req: Request, res: Response) => {
+// * Deletes Alert
+app.delete("/api/deleteAlert/:id", async (req: Request, res: Response) => {
   try {
-    const sayHello = "Hello World";
-    res.status(200).json(sayHello);
-  } catch (error) {
-    res.status(500).json({ message: "Error saying hi", error });
+    const { id } = req.params;
+    await prisma.alert.delete({
+      where: { id },
+    });
+
+    const alerts = await prisma.alert.findMany();
+    res.status(200).json(alerts);
+  } catch (err) {
+    console.error("Error deleting alert:", err);
+    res.status(500).json({ error: "Failed to delete entry." });
   }
 });
 
-// * Updates alert based on what was passed into the body
+// * Updates alert based on what was passed into body
 app.patch("/api/updateAlert/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const updates = req.body;
 
-    !id ? res.status(400).json({ error: "ID is required" }) : "Looking good";
-
-    !updates || Object.keys(updates).length === 0
-      ? res.status(400).json({ error: "No Update data provided" })
-      : "Data provided";
+    if (!updates || Object.keys(updates).length === 0) {
+      res.status(400).json({ error: "No updates provided" });
+    }
 
     const updatedAlert = await prisma.alert.update({
       where: { id: Number(id).toString() },
@@ -67,13 +71,24 @@ app.patch("/api/updateAlert/:id", async (req: Request, res: Response) => {
   }
 });
 
-// Get all alerts
+//* Get all alerts
 app.get("/api/alerts", async (req: Request, res: Response) => {
   try {
     const alerts = await prisma.alert.findMany();
     res.status(200).json(alerts);
   } catch (error) {
     res.status(500).json({ message: "Error fetching alerts", error });
+  }
+});
+
+// * SERVER PING
+app.get("/api/hello", async (req: Request, res: Response) => {
+  try {
+    const sayHello =
+      "Hello, your server is running at " + `http://localhost:${port}`;
+    res.status(200).json(sayHello);
+  } catch (error) {
+    res.status(500).json({ message: "Error saying hi", error });
   }
 });
 
