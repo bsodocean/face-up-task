@@ -1,19 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
-  provider = "sqlite"  // Use SQLite as the database provider
-  url      = "file:./dev.db"  // Path to the SQLite database file
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
-
-generator client {
-  provider = "prisma-client-js"  
-}
-
-// Define your Alert model
 model Alert {
-  id        Int      @id @default(autoincrement())
-  name      String
-  age       Int
-  fileUrl   String?
-  createdAt DateTime @default(now())
+  id          String   @id
+  name        String
+  age         Int
+  description String
+  fileUrl     String?
+  createdAt   DateTime @default(now())
 }
