@@ -1,15 +1,8 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
+import { Alert } from "../../../types";
+import HttpService from "../httpService";
 import SubmitAlert from "../SubmitAlert";
-import HttpService from "../httpservice";
 import "./AlertList.css";
-
-interface Alert {
-  id: number;
-  name: string;
-  age: number;
-  description: string;
-  file?: string | File | null;
-}
 
 const AlertList: FC = () => {
   const [alerts, setAlerts] = useState<Alert[]>([
@@ -32,18 +25,18 @@ const AlertList: FC = () => {
   const [activeEdit, setActiveEdit] = useState(false);
   const [newFormData, setNewFormData] = useState({
     name: "",
-    age: "",
+    age: 0,
     description: "",
-    file: null,
+    file: "",
   });
 
   useEffect(() => {
     if (activeAlert) {
       setNewFormData({
         name: activeAlert.name,
-        age: String(activeAlert.age),
+        age: activeAlert.age,
         description: activeAlert.description,
-        file: activeAlert.file ?? null,
+        file: activeAlert.file as string,
       });
     }
   }, [activeAlert]);
@@ -63,6 +56,12 @@ const AlertList: FC = () => {
   const addAlertEntry = (alert: Omit<Alert, "id">) => {
     const newAlert = { ...alert, id: Date.now() };
     setAlerts((prevAlerts) => [...prevAlerts, newAlert]);
+    HttpService.addAlertEntry(
+      newAlert.id.toString(),
+      newAlert.name,
+      newAlert.age,
+      newAlert.description
+    );
   };
 
   const editEntry = () => {
@@ -71,8 +70,14 @@ const AlertList: FC = () => {
       setActiveAlert({
         ...activeAlert,
         ...newFormData, //
-        age: Number(newFormData.age), // Convert age to a number
+        age: newFormData.age,
       });
+      HttpService.editAlertEntry(
+        activeAlert.id.toString(),
+        newFormData.name,
+        Number(newFormData.age),
+        newFormData.description
+      );
     }
   };
 
@@ -80,6 +85,8 @@ const AlertList: FC = () => {
     setAlerts((prevAlerts) =>
       prevAlerts.filter((alert) => alert.id !== entryId)
     );
+    HttpService.deleteAlertEntry(entryId);
+    closeModal();
   };
 
   return (
@@ -104,21 +111,7 @@ const AlertList: FC = () => {
                 <td>{alert.name}</td>
                 <td>{alert.age}</td>
                 <td>
-                  {alert.file ? (
-                    <a
-                      href={
-                        typeof alert.file === "string"
-                          ? alert.file // It's already a string URL
-                          : alert.file instanceof File
-                          ? URL.createObjectURL(alert.file) // It's a File object, create URL
-                          : "#"
-                      }
-                    >
-                      Download
-                    </a>
-                  ) : (
-                    "No file"
-                  )}
+                  {alert.file ? <div>{alert.file.toString()}</div> : "No file"}
                 </td>
                 <td>
                   <button onClick={() => toggleDetails(alert.id)}>
@@ -157,7 +150,10 @@ const AlertList: FC = () => {
                   type='text'
                   value={newFormData.age}
                   onChange={(e) =>
-                    setNewFormData({ ...newFormData, age: e.target.value })
+                    setNewFormData({
+                      ...newFormData,
+                      age: Number(e.target.value),
+                    })
                   }
                 />
                 <strong>Description:</strong>
@@ -173,7 +169,7 @@ const AlertList: FC = () => {
                 />
                 <strong>File:</strong>
                 {newFormData.file ? (
-                  <a href={URL.createObjectURL(newFormData.file)}>Download</a>
+                  <a href={newFormData.file}>Download</a>
                 ) : (
                   "No file"
                 )}
@@ -193,17 +189,7 @@ const AlertList: FC = () => {
                 <p>
                   <strong>File:</strong>{" "}
                   {activeAlert.file ? (
-                    <a
-                      href={
-                        typeof activeAlert.file === "string"
-                          ? activeAlert.file
-                          : activeAlert.file
-                          ? URL.createObjectURL(activeAlert.file)
-                          : "#"
-                      }
-                    >
-                      Download
-                    </a>
+                    <a href={activeAlert.file.toString()}>Download</a>
                   ) : (
                     "No file"
                   )}
