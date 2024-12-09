@@ -2,9 +2,15 @@
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #e3f2fd;
+  background-color: black;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0px 5px gold;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
 }
 
 .responsive-form {
@@ -21,7 +27,7 @@
 label {
   font-weight: bold;
   margin-bottom: 8px;
-  color: #0d47a1;
+  color: white;
 }
 
 input {
@@ -30,22 +36,23 @@ input {
   border: 1px solid #bbdefb;
   border-radius: 6px;
   background-color: white;
-  color: #0d47a1;
+  color: black;
   outline: none;
   transition: all 0.3s ease;
 }
 
 input:focus {
-  border-color: #42a5f5;
-  box-shadow: 0 0 5px #42a5f5;
+  border-color: gold;
+  box-shadow: 0 0 10px gold;
 }
 
 button {
   padding: 12px;
   font-size: 16px;
+  font-weight: bolder;
   border: none;
-  background-color: #0d47a1;
-  color: white;
+  background-color: gold;
+  color: black;
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;

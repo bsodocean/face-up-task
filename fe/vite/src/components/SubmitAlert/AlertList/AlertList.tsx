@@ -3,24 +3,11 @@ import { Alert } from "../../../types";
 import HttpService from "../httpService";
 import SubmitAlert from "../SubmitAlert";
 import "./AlertList.css";
+import useAlerts from "./useAlertsHook";
 
 const AlertList: FC = () => {
-  const [alerts, setAlerts] = useState<Alert[]>([
-    {
-      name: "René Descartes",
-      age: 23,
-      id: 1142002,
-      description: "I think, therefore I am.",
-    },
-    {
-      name: "William Shakespear",
-      age: 30,
-      id: 2002411,
-      description:
-        "Be not afraid of greatness. Some are born great, some achieve greatness, and others have greatness thrust upon them.",
-    },
-  ]);
-
+  const { fetchAlerts, loading, error } = useAlerts();
+  const [alerts, setAlerts] = useState<Alert[]>(fetchAlerts);
   const [activeAlert, setActiveAlert] = useState<Alert | null>(null);
   const [activeEdit, setActiveEdit] = useState(false);
   const [newFormData, setNewFormData] = useState({
@@ -29,6 +16,10 @@ const AlertList: FC = () => {
     description: "",
     file: "",
   });
+
+  useEffect(() => {
+    setAlerts(fetchAlerts);
+  }, [fetchAlerts]);
 
   useEffect(() => {
     if (activeAlert) {
@@ -40,6 +31,9 @@ const AlertList: FC = () => {
       });
     }
   }, [activeAlert]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading alerts: {error}</div>;
 
   const toggleDetails = (id: number) => {
     const selectedAlert = alerts.find((alert) => alert.id === id);
@@ -66,17 +60,28 @@ const AlertList: FC = () => {
 
   const editEntry = () => {
     setActiveEdit((prevState) => !prevState);
+
     if (activeAlert) {
-      setActiveAlert({
+      const updatedAlert = {
         ...activeAlert,
-        ...newFormData, //
-        age: newFormData.age,
-      });
+        ...newFormData,
+        age: newFormData.age, // Make sure age is updated correctly
+      };
+
+      // Update state with the new alert in the list
+      setActiveAlert(updatedAlert);
+      setAlerts((prevAlerts) =>
+        prevAlerts.map((alert) =>
+          alert.id === updatedAlert.id ? updatedAlert : alert
+        )
+      );
+
+      // Send the updated data to the backend
       HttpService.editAlertEntry(
-        activeAlert.id.toString(),
-        newFormData.name,
-        Number(newFormData.age),
-        newFormData.description
+        updatedAlert.id.toString(),
+        updatedAlert.name,
+        updatedAlert.age,
+        updatedAlert.description
       );
     }
   };
@@ -111,7 +116,7 @@ const AlertList: FC = () => {
                 <td>{alert.name}</td>
                 <td>{alert.age}</td>
                 <td>
-                  {alert.file ? <div>{alert.file.toString()}</div> : "No file"}
+                  {alert.file ? <a>{alert.file.toString()}</a> : "No file"}
                 </td>
                 <td>
                   <button onClick={() => toggleDetails(alert.id)}>
@@ -196,15 +201,17 @@ const AlertList: FC = () => {
                 </p>
               </>
             )}
-            <button className='edit-btn' onClick={editEntry}>
-              Edit
-            </button>
-            <button
-              className='delete-btn'
-              onClick={() => deleteEntry(activeAlert.id)}
-            >
-              Delete
-            </button>
+            <div className='btns'>
+              <button className='edit-btn' onClick={editEntry}>
+                Edit
+              </button>
+              <button
+                className='delete-btn'
+                onClick={() => deleteEntry(activeAlert.id)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,9 +1,11 @@
-import express, { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
+import express, { Request, Response } from "express";
 
 const app = express();
 const port: number = process.env.PORT ? Number(process.env.PORT) : 3000;
+const hostPort = 5173;
+const host = `http://localhost:${hostPort}`;
 
 const prisma = new PrismaClient();
 
@@ -11,9 +13,41 @@ const prisma = new PrismaClient();
 app.use(
   express.json(),
   cors({
-    origin: "http://localhost:5173", // TODO make this dynamic
+    origin: host,
   })
 );
+
+async function insertDummyData() {
+  try {
+    // Check if any data exists in the Alert table
+    const existingAlerts = await prisma.alert.findMany();
+    if (existingAlerts.length === 0) {
+      const dummyData = [
+        {
+          id: "470c53e7-ce5b-4215-97cb-e6c13391f9c1",
+          name: "John Doe",
+          age: 25,
+          description: "Sample alert 1",
+        },
+        {
+          id: "470c53e7-ce5b-4215-97cb-e6c13391f1c5",
+          name: "Jane Smith",
+          age: 30,
+          description: "Sample alert 2",
+        },
+      ];
+
+      await prisma.alert.createMany({ data: dummyData });
+      console.log("Dummy alerts added successfully.");
+    } else {
+      console.log("Alerts already exist in the database.");
+    }
+  } catch (error) {
+    console.error("Error inserting alerts:", error);
+  }
+}
+
+insertDummyData();
 
 // API Routes
 
@@ -50,6 +84,17 @@ app.delete("/api/deleteAlert/:id", async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error deleting alert:", err);
     res.status(500).json({ error: "Failed to delete entry." });
+  }
+});
+
+// * Deletes whole table for alerts
+app.delete("/api/deleteAllAlerts", async (req: Request, res: Response) => {
+  try {
+    await prisma.alert.deleteMany({});
+    res.status(200).json("Deleted table alerts succesfully");
+  } catch (err) {
+    console.error("Error deleting alerts table", err);
+    res.status(500).json({ error: "Failed to delete alerts" });
   }
 });
 

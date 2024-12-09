@@ -1,73 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Bokor&family=Parkinsans:wght@300..800&display=swap");
+
 .alert-table-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #e3f2fd;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 30px;
+  background: none;
+  border-radius: 12px;
+  color: #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 h2 {
   text-align: center;
+  color: gold;
+  font-size: 24px;
   margin-bottom: 20px;
-  color: #0d47a1;
+  border-bottom: 2px solid gold;
+  padding-bottom: 8px;
 }
 
+/* Table Styling */
 .alert-table {
   width: 100%;
   border-collapse: collapse;
+  background-color: rgba(0, 0, 0);
+  color: white;
   margin-top: 20px;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
 }
 
 .alert-table th,
 .alert-table td {
   padding: 12px;
   text-align: left;
-  border: 1px solid #ddd;
-}
-
-.alert-table th {
-  background-color: #42a5f5;
-  color: white;
-}
-
-.alert-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+  border: 1px solid gold;
+  font-weight: bold;
 }
 
 .alert-table tr:hover {
-  background-color: #e3f2fd;
-}
-
-button {
-  padding: 8px 12px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-.edit-btn {
-  background-color: #0d47a1;
-  color: white;
-  margin-right: 8px;
-}
-
-.edit-btn:hover {
-  background-color: #1565c0;
-}
-
-.delete-btn {
-  background-color: #d32f2f;
-  color: white;
-}
-
-.delete-btn:hover {
-  background-color: #b71c1c;
+  background-color: #131313;
+  transition: 0.3s;
 }
 
 .modal-overlay {
@@ -84,13 +59,15 @@ button {
 }
 
 .modal {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
+  background: black;
+  padding: 30px;
+  border-radius: 12px;
   width: 400px;
   max-width: 90%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .close-button {
@@ -106,42 +83,114 @@ button {
 
 .modal h2 {
   margin-top: 0;
+  font-size: 20px;
+  color: gold;
+  text-align: center;
 }
 
-.alert-table-container {
-  margin-top: 20px;
+strong {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: white;
 }
 
-.alert-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+/* Input Fields */
+.modal input[type="text"] {
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: 2px solid gold;
+  color: white;
+  background: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
 }
 
-.alert-table th,
-.alert-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
+.modal input[type="text"]:focus {
+  border-color: #42a5f5;
+  outline: none;
+  box-shadow: 0 0 8px rgba(66, 165, 245, 0.2);
 }
 
+/* File Link */
+.modal a {
+  color: #1565c0;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.modal a:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+
+p {
+  color: gold;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+.edit-btn {
+  background-color: greenyellow;
+  color: black;
+  margin-right: 8px;
+}
+
+.edit-btn:hover {
+  background-color: yellow;
+}
+
+.delete-btn {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #b71c1c;
+}
+
+/* Responsive Design */
 @media (max-width: 600px) {
+  .alert-table-container {
+    padding: 20px;
+  }
+
   .alert-table th,
   .alert-table td {
-    padding: 8px;
+    padding: 10px;
     font-size: 14px;
   }
 
   h2 {
-    font-size: 18px;
+    font-size: 22px;
   }
 
-  .alert-table-container {
+  .modal {
+    width: 80%;
+    padding: 20px;
+  }
+
+  .modal input[type="text"] {
+    font-size: 14px;
     padding: 10px;
   }
 
   button {
     font-size: 12px;
-    padding: 6px 10px;
+    padding: 8px 16px;
   }
 }
